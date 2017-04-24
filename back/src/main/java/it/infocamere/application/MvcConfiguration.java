@@ -49,7 +49,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 		Hibernate5Module hm = new Hibernate5Module();
 		// se non esplicitamente inizializzati,gli oggetti lazy load appaiono
 		// null
-		hm.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING, true);
+		hm.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING, false);
 
 		builder.modulesToInstall(hm);
 		converters.add(new MappingJackson2HttpMessageConverter(builder.build()));

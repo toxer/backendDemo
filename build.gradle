@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        //imposto qui la versione di spring-boot
+       classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE")
+   }
+
+}
+
+allprojects {
+
+    apply plugin:'java'
+		apply plugin: 'org.springframework.boot'
+		apply plugin: 'eclipse-wtp'
+}
+
+subprojects{
+  repositories {
+      mavenCentral()
+  }
+}
+
+project(':back'){
+  apply plugin:'war'
+	eclipse{
+			 wtp {
+		    	facet {
+
+		    		facet name:"jst.web",version:'3.0'
+		    		facet name:"wst.jsdt.web",version:'1.0'
+		    	}
+		    }
+	    }
+
+      	dependencies{
+      	
+      //permette di non restartare a ogni modifica
+      	compile("org.springframework.boot:spring-boot-devtools")
+      	//usa le taglib se necessarie nella jsp
+      	compile group: 'javax.servlet', name: 'jstl', version: '1.2'  
+      	
+
+//necessario per jpa con hibernate
+  compile("org.springframework.boot:spring-boot-starter-web")
+  //permette di configurare la servlet in modo da inserire i filtri
+  //per la posizione delle jsp in MvcConfiguration
+  compile("org.apache.tomcat.embed:tomcat-embed-jasper")
+  
+  compile("org.springframework.boot:spring-boot-starter-data-jpa")
+ 	//abilita il modulo per il lazy loading o meno da impostare in configurazione
+  compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.8.8'
+  
+  //necessario specificare il driver del db
+  //mysql
+    providedCompile group: 'mysql', name: 'mysql-connector-java', version: '5.1.41'
+}
+    //impostazioni per l'assemblaggio
+    sourceSets {
+	    main {
+	        // where does the Java source code live?
+
+	        java {
+	            srcDir "${project.projectDir}/src/main/java"
+	        }
+
+	        // where do classpath resources like *.properties files live?
+	        resources {
+	            srcDir "${project.projectDir}/resources"
+
+	        }
+	    }
+	}
+
+
+		war {
+			baseName="backend"
+	   	}
+
+}
